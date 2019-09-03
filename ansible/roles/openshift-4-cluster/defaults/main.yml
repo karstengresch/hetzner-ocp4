@@ -39,3 +39,5 @@ coreos_image_location: /var/lib/libvirt/images/rhcos-{{ coreos_version }}-qemu.q
 certificates_dir: "{{ playbook_dir }}/../certificate"
 certficate_fullchain: "{{ certificates_dir }}/{{ cluster_name }}.{{ public_domain }}/fullchain.crt"
 certficate_key: "{{ certificates_dir }}/{{ cluster_name }}.{{ public_domain }}/cert.key"
+
+install_ocs: true
