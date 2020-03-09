@@ -73,7 +73,7 @@
         accessModes:
         - ReadWriteMany
         capacity:
-          storage: 100Gi
+          storage: 250Gi
         nfs:
           path: "{{ storage_nfs_path_prefix }}/{{ cluster_name }}-pv-infra-registry" 
           server: "{{ vn_subnet.split('.')[:3] | join('.')}}.1"
@@ -94,7 +94,7 @@
         - ReadWriteMany
         resources:
           requests:
-            storage: 100Gi
+            storage: 250Gi
       
 - name: Add pvc registry-storage to image registry
   command: |
