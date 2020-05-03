@@ -8,6 +8,10 @@ Recent tests shows that SSD storage on the Server might be required for any pers
 
 Use it at your own please and risk!
 
+# Release notes
+
+[Release notes](docs/release-notes.md)
+
 # Contribution
 If you want to provide additional features, please feel free to contribute via pull requests or any other means.
 
@@ -98,6 +102,9 @@ Here is an example about [_cluster.yml_](cluster-example.yml) file that contains
 |letsencrypt_account_email  |Email address that is used to create LetsEncrypt certs. If _cloudflare_account_email_ is not present for CloudFlare DNS recods, _letsencrypt_account_email_ is also used with CloudFlare DNS account email |
 |image_pull_secret|Token to be used to authenticate to the Red Hat image registry. You can download your pull secret from https://cloud.redhat.com/openshift/install/metal/user-provisioned |
 
+## Pre-releases
+
+[Read this if you want to deploy pre releases](docs/ocp-pre-release.md)
 
 ### Setup public DNS records
 
@@ -115,7 +122,7 @@ Please configure in `cluster.yml` all necessary credentials:
 
 | DNS provider | Variables  |
 |---|---|
-|CloudFlare|`cloudflare_account_email: john@example.com` <br> `cloudflare_account_api_token: 9348234sdsd894.....` <br>  `cloudflare_zone: domain.tld`|
+|CloudFlare|`cloudflare_account_email: john@example.com` <br> Use the global api key here! (API-Token is not supported!) (Details in #86) <br>`cloudflare_account_api_token: 9348234sdsd894.....` <br>  `cloudflare_zone: domain.tld`|
 |Route53 / AWS|`aws_access_key: key` <br/>`aws_secret_key: secret` <br/>`aws_zone: domain.tld` <br/>|
 |GCP|`gcp_project: project-name `<br/>`gcp_managed_zone_name: 'zone-name'`<br/>`gcp_managed_zone_domain: 'example.com.'`<br/>`gcp_serviceaccount_file: ../gcp_service_account.json` |
 
@@ -130,6 +137,7 @@ Please configure in `cluster.yml` all necessary credentials:
 |`openshift_install_command`|[check defaults](ansible/roles/openshift-4-cluster/defaults/main.yml)|Important for air-gapped installation. checkout [docs/air-gapped.md](docs/air-gapped.md)|
 |`install_config_additionalTrustBundle`|empty|Important for air-gapped installation. checkout [docs/air-gapped.md](docs/air-gapped.md)
 |`install_config_imageContentSources`|empty|Important for air-gapped installation. checkout [docs/air-gapped.md](docs/air-gapped.md)
+|`letsencrypt_disabled`|`false`|This allows you to disable letsencrypt setup. (Default is enabled letsencrypt.)
 
 ## Prepare kvm-host and install OpenShift
 
@@ -142,7 +150,9 @@ Please configure in `cluster.yml` all necessary credentials:
 
 * [How to install and manage more than one OpenShift Cluster with  hetzner-ocp4](docs/multi-cluster-guide.md)
 * [How to install an air-gapped cluster with hetzner-ocp4](docs/air-gapped.md)
+* [How to install an proxy cluster with hetzner-ocp4](docs/proxy.md)
 * [How to setup a container native virtualization lab (nested) with hetzner-ocp4](docs/cnv.md)
+* [How to install an OpenShift nighly or RC (any kind of pre-release)](docs/ocp-pre-release.md)
 
 # Useful commands
 

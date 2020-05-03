@@ -22,7 +22,7 @@
   import_tasks: post-install-storage-nfs.yml
   when: storage_nfs == true
   tags: storage
-  
+
 - name: Set image registry managementState from Removed to Managed
   command: "oc patch configs.imageregistry.operator.openshift.io cluster --type merge --patch '{\"spec\":{\"managementState\": \"Managed\"}}' --config {{ openshift_install_dir }}/auth/kubeconfig"
   register: registry_status
@@ -30,7 +30,7 @@
   delay: 30
   until: registry_status.rc == 0
   when: storage_nfs == true
-  tags: storage  
+  tags: storage
 
 - name: Waiting installation to complete
   command: "/opt/openshift-install-{{ openshift_version }}/openshift-install wait-for install-complete --dir {{ openshift_install_dir }}"
@@ -42,78 +42,8 @@
 ###########################################################################################
 # Install letsencrypt certificates
 ###########################################################################################
-- name: Check certificates exist
-  stat:
-    path: "{{ certficate_fullchain }}"
-  register: crt
-- name: Check ssl key exist
-  stat:
-    path: "{{ certficate_key }}"
-  register: key
-
-- name: Install certificates
-  block:
-    - name: Create secret with certificates for openshift-ingress
-      k8s:
-        state: present
-        kubeconfig: "{{ openshift_install_dir }}/auth/kubeconfig"
-        definition:
-          apiVersion: v1
-          kind: Secret
-          data:
-            tls.crt: "{{  lookup('file',certficate_fullchain, rstrip=false) | b64encode }}"
-            tls.key: "{{  lookup('file',certficate_key, rstrip=false)  | b64encode }}"
-          metadata:
-            name: letsencrypt-router-certs
-            namespace: openshift-ingress
-          type: kubernetes.io/tls
-    - name: Patch ingresscontroller/default
-      k8s:
-        state: present
-        kubeconfig: "{{ openshift_install_dir }}/auth/kubeconfig"
-        merge_type: merge
-        definition:
-          apiVersion: operator.openshift.io/v1
-          kind: IngressController
-          metadata:
-            name: default
-            namespace: openshift-ingress-operator
-          spec:
-            defaultCertificate:
-              name: letsencrypt-router-certs
-
-    - name: Create secret with certificates for openshift api
-      k8s:
-        state: present
-        kubeconfig: "{{ openshift_install_dir }}/auth/kubeconfig"
-        definition:
-          apiVersion: v1
-          kind: Secret
-          data:
-            tls.crt: "{{  lookup('file',certficate_fullchain, rstrip=false) | b64encode }}"
-            tls.key: "{{  lookup('file',certficate_key, rstrip=false)  | b64encode }}"
-          metadata:
-            name: letsencrypt-certs
-            namespace: openshift-config
-          type: kubernetes.io/tls
-    - name: Patch api server config
-      k8s:
-        state: present
-        kubeconfig: "{{ openshift_install_dir }}/auth/kubeconfig"
-        merge_type: merge
-        definition:
-          apiVersion: config.openshift.io/v1
-          kind: APIServer
-          metadata:
-            name: cluster
-          spec:
-            servingCerts:
-              namedCertificates:
-              - names:
-                - "api.{{ cluster_name }}.{{ public_domain }}"
-                servingCertificate:
-                  name: letsencrypt-certs
-  when: crt.stat.exists == True and key.stat.exists == True
+- include: certificate-install.yml
+  when: letsencrypt_disabled == false
 
 ###########################################################################################
 # Configure authentication
