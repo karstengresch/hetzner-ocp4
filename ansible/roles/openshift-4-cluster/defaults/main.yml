@@ -25,6 +25,7 @@ compute_vcpu: 8
 compute_special_cpu: "<cpu mode='host-passthrough'></cpu>"
 master_special_cpu: "<cpu mode='host-passthrough'></cpu>"
 compute_memory_size: 66560
+compute_memory_unit: 'MiB'
 # compute_memory_size: 49152
 # compute_memory_unit: 'MiB'
 # qemu-img image size specified.
