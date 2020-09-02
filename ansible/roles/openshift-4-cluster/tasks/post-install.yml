@@ -34,7 +34,7 @@
   tags: storage
 
 - name: Set image registry managementState from Removed to Managed
-  command: "oc patch configs.imageregistry.operator.openshift.io cluster --type merge --patch '{\"spec\":{\"managementState\": \"Managed\"}}' --config {{ openshift_install_dir }}/auth/kubeconfig"
+  command: "oc patch configs.imageregistry.operator.openshift.io cluster --type merge --patch '{\"spec\":{\"managementState\": \"Managed\"}}' --kubeconfig {{ openshift_install_dir }}/auth/kubeconfig"
   register: registry_status
   retries: 60
   delay: 30
@@ -55,17 +55,17 @@
 - include: certificate-install.yml
   when: letsencrypt_disabled == false
   tags:
-    - postinstall
+    - post-install
     - certificates
 
 ###########################################################################################
 # Configure authentication
 ###########################################################################################
 - tags:
-    - postinstall
+    - post-install
     - idp
   set_fact:
-    identity_roviders: "[]"
+    identity_providers: "[]"
 
 - name: Handle auth_htpasswd
   block:
@@ -93,10 +93,10 @@
           type: HTPasswd
     - name: Push htpasswd_idp to identity_providers
       set_fact:
-        identity_roviders: "{{ identity_roviders }} + [ {{ htpasswd_idp }} ]"
+        identity_providers: "{{ identity_providers }} + [ {{ htpasswd_idp }} ]"
   when: auth_htpasswd is defined
   tags:
-    - postinstall
+    - post-install
     - idp
 
 - name: Handle auth_redhatsso
@@ -125,12 +125,12 @@
           mappingMethod: claim
           name: RedHatSSO
           type: Google
-    - name: Push redhatsso_idp to identity_roviders
+    - name: Push redhatsso_idp to identity_providers
       set_fact:
-        identity_roviders: "{{ identity_roviders }} + [ {{ redhatsso_idp }} ]"
+        identity_providers: "{{ identity_providers }} + [ {{ redhatsso_idp }} ]"
   when: auth_redhatsso is defined
   tags:
-    - postinstall
+    - post-install
     - idp
 
 - name: Handle auth_github
@@ -168,12 +168,12 @@
           mappingMethod: claim
           name: GitHub
           type: GitHub
-    - name: Push github_idp to identity_roviders
+    - name: Push github_idp to identity_providers
       set_fact:
-        identity_roviders: "{{ identity_roviders }} + [ {{ github_idp }} ]"
+        identity_providers: "{{ identity_providers }} + [ {{ github_idp }} ]"
   when: auth_github is defined
   tags:
-    - postinstall
+    - post-install
     - idp
 
 - name: Configure identity providers
@@ -186,9 +186,9 @@
         metadata:
           name: cluster
         spec:
-          identityProviders: "{{ identity_roviders }}"
+          identityProviders: "{{ identity_providers }}"
   tags:
-    - postinstall
+    - post-install
     - idp
 
 
@@ -216,7 +216,7 @@
   with_items: "{{ cluster_role_bindings }}"
   when: cluster_role_bindings is defined
   tags:
-    - postinstall
+    - post-install
     - rolebindings
 
 ###########################################################################################
@@ -237,6 +237,6 @@
   debug:
     msg: "{{ install_status.stderr_lines | map('regex_replace', 'level=info msg=\"(.*)\"', '\\1') | list }}"
   tags:
-    - postinstall
+    - post-install
     - lastmessage
 

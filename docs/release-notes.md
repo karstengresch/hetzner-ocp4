@@ -1,5 +1,26 @@
 # RELEASE NOTES
 
+## 2020-07-30
+
+### Bump OpenShift Version to 4.5.2
+
+### feat(autostart): add autostart option for VMs
+
+Added option `vm_autostart` default (false).
+
+### Added docs/pci-passthrough.md
+
+### Big fixes
+
+ - fix(typo): correctly name identity_providers
+ - Cleanup post install tag name use post-install instead of postinstall
+ - Use --kubeconfig instead of --config
+ - Fixed #116 - LE certificate is not configured after fresh installation.
+ - Add daemon_reload to systemctl service installation
+ - Update ansible repo for RHEL
+ - Update docs/air-gapped.md
+ - Add draft tekton pipeline to test hetzner-ocp4
+
 ## 2020-07-03
 
 ### Use GitHub as a possible IdP
@@ -13,7 +34,7 @@ Be sure to only add one of of `organizations` or `teams` since the `teams` optio
 
 ### Add `dns_provider: none`
 
-With `dns_provider: none` the playbooks will not create public dns entries. (It will skip letsencrypt too) Please create public dns entries if you want to access your cluster. 
+With `dns_provider: none` the playbooks will not create public dns entries. (It will skip letsencrypt too) Please create public dns entries if you want to access your cluster.
 
 ### Add `public_ip` option
 
@@ -22,7 +43,7 @@ Override for public ip entries. defaults to `hostvars['localhost']['ansible_defa
 
 ### Update Centos8
 
-* Configure firewalld 
+* Configure firewalld
 * Fixed host prep (Add missing packages & documentation)
 
 ### Bugfixes
@@ -42,7 +63,7 @@ Override for public ip entries. defaults to `hostvars['localhost']['ansible_defa
 
 ### Use RBAC instead of changing SCC member for NFS provisioner
 
-Instead of 
+Instead of
 ```
 oc adm policy add-scc-to-user hostmount-anyuid \
     -n openshift-nfs-provisioner \
@@ -57,12 +78,12 @@ metadata:
   namespace: "openshift-nfs-provisioner"
 rules:
 - apiGroups:
-  - security.openshift.io 
+  - security.openshift.io
   resourceNames:
   - hostmount-anyuid
   resources:
-  - securitycontextconstraints 
-  verbs: 
+  - securitycontextconstraints
+  verbs:
   - use
 ---
 kind: RoleBinding
@@ -81,7 +102,7 @@ roleRef:
 
 ## 2020-04-01
 
-### Update air-gapped docs 
+### Update air-gapped docs
 
 Add `REGISTRY_COMPATIBILITY_SCHEMA1_ENABLED=true` to air-gapped registry. That solve some skopeo copy problemes.
 

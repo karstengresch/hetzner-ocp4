@@ -69,7 +69,7 @@ subscription-manager repos \
     --enable=rhel-8-for-x86_64-baseos-rpms \
     --enable=rhel-8-for-x86_64-appstream-rpms \
     --enable=rhel-8-for-x86_64-highavailability-rpms \
-    --enable=ansible-2.8-for-rhel-8-x86_64-rpms \
+    --enable=ansible-2.9-for-rhel-8-x86_64-rpms \
     --enable=openstack-15-for-rhel-8-x86_64-rpms
 ```
 
@@ -140,6 +140,7 @@ Please configure in `cluster.yml` all necessary credentials:
 |Variable | Default | Description |
 |---|---|---|
 |`storage_nfs`|false|Install NFS Storage with dynamic provisioning|
+|`vm_autostart`|false|Create cluster VMs with `autostart` enabled|
 |`auth_redhatsso`|empty|Install Red Hat SSO, checkout  [_cluster-example.yml_](cluster-example.yml) for an example |
 |`auth_htpasswd`|empty|Install htpasswd, checkout  [_cluster-example.yml_](cluster-example.yml) for an example |
 |`auth_github`|empty|Install GitHub IDP, checkout  [_cluster-example.yml_](cluster-example.yml) for an example |
@@ -164,6 +165,7 @@ Please configure in `cluster.yml` all necessary credentials:
 * [How to setup a container native virtualization lab (nested) with hetzner-ocp4](docs/cnv.md)
 * [How to install an OpenShift nighly or RC (any kind of pre-release)](docs/ocp-pre-release.md)
 * [Disk management (add disk to vm, wipe node)](docs/disk-management.md)
+* [How to passthrough nvme or gpu (pci-passthrough](docs/pci-passthrough.md)
 
 # Useful commands
 
