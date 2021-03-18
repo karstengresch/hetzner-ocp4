@@ -8,6 +8,11 @@
     state: started
     enabled: yes
 
+- name: 'Restart libvirtd because of Issue #146'
+  systemd:
+    name: libvirtd
+    state: restarted
+
 - name: Verify KVM module is loaded
   shell: "lsmod | grep -i kvm"
   register: result
@@ -26,7 +31,7 @@
     path: /etc/systemd/network/10-mainif.network
   register: stat_result
 
-- name:
+- name: Add IPForward=ipv4 to /etc/systemd/network/10-mainif.network
   lineinfile:
     path: /etc/systemd/network/10-mainif.network
     line: 'IPForward=ipv4'
