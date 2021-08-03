@@ -1,5 +1,14 @@
 # RELEASE NOTES
 
+## 2021-04-09
+
+ * Bump OpenShift Version to 4.7.0
+ * Add opm installation
+ * Add dns provider: hetzner
+ * Use absolute path to oc binary
+ * Fixed some typos
+ * Adds the [NTP Add-On](/ansible/add-on-roles/ntp)
+
 ## 2020-12-28
 
 * **Add support of 3 node compact cluster (Fixed issue #158 )**
