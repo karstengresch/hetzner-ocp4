@@ -17,15 +17,17 @@ listen_address_ipv6: "{{ hostvars['localhost']['ansible_default_ipv6']['address'
 
 master_count: 3
 master_vcpu: 4
-master_memory_size: 16384
+master_memory_size: 32768
 master_memory_unit: 'MiB'
 # qemu-img image size specified.
 #   You may use k, M, G, T, P or E suffixe
 master_root_disk_size: '120G'
 
-compute_count: 3
-compute_vcpu: 2
-compute_memory_size: 8192
+compute_count: 2
+compute_vcpu: 8
+compute_special_cpu: "<cpu mode='host-passthrough'></cpu>"
+master_special_cpu: "<cpu mode='host-passthrough'></cpu>"
+compute_memory_size: 66560
 compute_memory_unit: 'MiB'
 # qemu-img image size specified.
 #   You may use k, M, G, T, P or E suffixe
@@ -92,3 +94,4 @@ sdn_plugin_name: OVNKubernetes
 masters_schedulable: true
 
 add_ons_enabled: false
+
