@@ -210,6 +210,7 @@ Please configure in `cluster.yml` all necessary credentials:
 * [Disk management (add disk to vm, wipe node)](docs/disk-management.md)
 * [How to passthrough nvme or gpu (pci-passthrough](docs/pci-passthrough.md)
 * [How to install OKD](docs/how-to-install-okd.md)
+* [Virsh commands cheatsheet to manage KVM guest virtual machines](https://computingforgeeks.com/virsh-commands-cheatsheet/)
 
 # Useful commands
 
@@ -217,3 +218,9 @@ Please configure in `cluster.yml` all necessary credentials:
 |---|---|
 |Check haproxy connections| ```podman exec -ti openshift-4-loadbalancer-${cluster_name} ./watch-stats.sh```
 |Start cluster after reboot|```./ansible/04-start-cluster.yml```
+
+
+
+# Stargazers over time
+
+[![Stargazers over time](https://starchart.cc/RedHat-EMEA-SSA-Team/hetzner-ocp4.svg)](https://starchart.cc/RedHat-EMEA-SSA-Team/hetzner-ocp4)
