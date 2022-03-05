@@ -16,7 +16,8 @@
     state: started
     enabled: true
 
-- set_fact:
+- name: Set nfs_server
+  set_fact:
     nfs_server: "nfs-server"
   when: ansible_os_family == "RedHat" and ansible_distribution_major_version == '8'
 
@@ -36,8 +37,15 @@
     group: root
     mode: 0644
     block: |
+      {% if 'IPv4' in ip_families -%}
       {{ storage_nfs_path_prefix }}/{{ cluster_name }}-pv-infra-registry {{ vn_subnet }}/24(rw,sync,no_root_squash)
       {{ storage_nfs_path_prefix }}/{{ cluster_name }}-pv-user-pvs {{ vn_subnet }}/24(rw,sync,no_root_squash)
+      {% endif -%}
+      {% if 'IPv6' in ip_families -%}
+      {{ storage_nfs_path_prefix }}/{{ cluster_name }}-pv-infra-registry {{ vn_subnet_ipv6 }}::/80(rw,sync,no_root_squash)
+      {{ storage_nfs_path_prefix }}/{{ cluster_name }}-pv-user-pvs {{ vn_subnet_ipv6 }}::/80(rw,sync,no_root_squash)
+      {% endif -%}
+
   tags: exports
 
 - name: Adjust directory permissions
@@ -46,8 +54,8 @@
     state: directory
     mode: "770"
   with_items:
-  - "infra-registry"
-  - "user-pvs"
+    - "infra-registry"
+    - "user-pvs"
 
 - name: reload nfs
   command: 'exportfs -ra'
@@ -69,12 +77,12 @@
         name: nfs-registry-storage
       spec:
         accessModes:
-        - ReadWriteMany
+          - ReadWriteMany
         capacity:
           storage: 100Gi
         nfs:
           path: "{{ storage_nfs_path_prefix }}/{{ cluster_name }}-pv-infra-registry"
-          server: "{{ vn_subnet.split('.')[:3] | join('.')}}.1"
+          server: "host.compute.local"
         persistentVolumeReclaimPolicy: Recycle
 
 - name: Create registry-storage pvc
@@ -93,20 +101,23 @@
         namespace: openshift-image-registry
       spec:
         accessModes:
-        - ReadWriteMany
+          - ReadWriteMany
         resources:
           requests:
             storage: 100Gi
 
 - name: Add pvc registry-storage to image registry
+  # noqa var-spacing
+  # yamllint disable rule:line-length
   command: |
     /opt/openshift-client-{{ openshift_version }}/oc patch configs.imageregistry.operator.openshift.io cluster --type='json' -p='[{"op": "remove", "path": "/spec/storage" },{"op": "add", "path": "/spec/storage", "value": {"pvc":{"claim": "registry-storage"}}}]' --kubeconfig {{ openshift_install_dir }}/auth/kubeconfig
+  # yamllint enable rule:line-length
   register: registry_status
   retries: 60
   delay: 30
   until: registry_status.rc == 0
   tags:
-   - storage
+    - storage
 
 - name: Adjust directory permissions
   file:
@@ -114,8 +125,8 @@
     state: directory
     mode: "770"
   with_items:
-  - "infra-registry"
-  - "user-pvs"
+    - "infra-registry"
+    - "user-pvs"
 
 - name: Create Namespace
   k8s:
@@ -277,13 +288,13 @@
                   - name: PROVISIONER_NAME
                     value: redhat-emea-ssa-team/hetzner-ocp4
                   - name: NFS_SERVER
-                    value: "{{ vn_subnet.split('.')[:3] | join('.')}}.1"
+                    value: "host.compute.local"
                   - name: NFS_PATH
                     value: "{{ storage_nfs_path_prefix }}/{{ cluster_name }}-pv-user-pvs"
             volumes:
               - name: nfs-client-root
                 nfs:
-                  server: "{{ vn_subnet.split('.')[:3] | join('.')}}.1"
+                  server: "host.compute.local"
                   path: "{{ storage_nfs_path_prefix }}/{{ cluster_name }}-pv-user-pvs"
 
 - name: Storage Class
