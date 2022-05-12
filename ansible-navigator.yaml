@@ -1,0 +1,12 @@
+---
+ansible-navigator:
+  execution-environment:
+    image: quay.io/redhat-emea-ssa-team/hetzner-ocp4-ansible-ee:devel
+    container-options:
+      - "--net=host"
+  logging:
+    level: critical
+  mode: stdout
+  playbook-artifact:
+    enable: True
+    save-as: /tmp/hetzner-ocp4-{playbook_name}-artifact-{ts_utc}.json

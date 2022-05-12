@@ -2,3 +2,5 @@ cluster.yml
 .DS_Store
 certificate/
 ocp4/
+ansible-navigator.log
+context/
