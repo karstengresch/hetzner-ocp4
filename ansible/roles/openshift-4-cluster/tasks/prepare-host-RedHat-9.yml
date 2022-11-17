@@ -1,6 +1,6 @@
 ---
 - name: Installing KVM Packages
-  ansible.builtin.package:
+  yum:
     name:
       - "@virtualization-hypervisor"
       - "@virtualization-client"
@@ -9,12 +9,12 @@
     state: present
 
 - name: Upgrade all packages
-  ansible.builtin.package:
+  yum:
     name: '*'
     state: latest
 
 - name: Allow NFS traffic from VM's to Host
-  ansible.posix.firewalld:
+  firewalld:
     zone: libvirt
     state: enabled
     permanent: yes
@@ -26,7 +26,7 @@
   notify: 'reload firewalld'
 
 - name: Allow OpenShift traffic from VM's to Host
-  ansible.posix.firewalld:
+  firewalld:
     zone: libvirt
     state: enabled
     permanent: yes
@@ -39,7 +39,7 @@
   notify: 'reload firewalld'
 
 - name: Allow OpenShift traffic from public to Host
-  ansible.posix.firewalld:
+  firewalld:
     zone: public
     state: enabled
     permanent: yes
@@ -51,4 +51,4 @@
   notify: 'reload firewalld'
 
 - name: firewalld reload
-  ansible.builtin.command: firewall-cmd --reload
+  command: firewall-cmd --reload

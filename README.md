@@ -28,6 +28,7 @@ Our instructions are based on the CentOS Root Server as provided by https://www.
 ** Supported root server operating systems: **
 - CentOS Stream 8
 - RHEL 8 - How to install RHEL8: https://keithtenzer.com/cloud/how-to-create-a-rhel-8-image-for-hetzner-root-servers/
+- RHEL 9 - leapp update from RHEL 8
 
 ## Infra providers
 * [Hetzner CentOS](docs/hetzner.md)
@@ -69,7 +70,7 @@ subscription-manager repos \
     --enable=rhel-8-for-x86_64-baseos-rpms \
     --enable=rhel-8-for-x86_64-appstream-rpms \
     --enable=rhel-8-for-x86_64-highavailability-rpms \
-    --enable=ansible-automation-platform-2.1-for-rhel-8-x86_64-rpms
+    --enable=ansible-automation-platform-2.2-for-rhel-8-x86_64-rpms
 
 
 dnf install -y ansible-navigator git podman
